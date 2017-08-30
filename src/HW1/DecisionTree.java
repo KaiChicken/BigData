@@ -36,6 +36,15 @@ public class DecisionTree {
         
     }
     
+    public void createRoot(){
+        
+    }
+    
+    public Tree createTreeByGini(String[][] data, Tree child){
+        
+        return null; 
+    }
+    
     public void createTree(String[][] data, int numberOfAttributeRemaining){
         int[][] buyingMatrix = new int[2][4];
         int[][] maintMatrix = new int[2][4];
@@ -43,6 +52,7 @@ public class DecisionTree {
         int[][] personsMatrix = new int[2][3];
         int[][] lugBootMatrix = new int[2][3];
         int[][] safetyMatrix = new int[2][3];
+        double[] attributeGini = new double[6];
         double buyingGini = 0; 
         double maintGini = 0; 
         double doorsGini = 0; 
@@ -50,7 +60,7 @@ public class DecisionTree {
         double lugBootGini = 0;
         double safetyGini = 0; 
         for(int i = 0; i < data.length; i++){
-            //1 matrix
+            //1 buying matrix
             for(int j = 0; j < buyingAttribute.length; j++){
                 if (data[i][0].equals(buyingAttribute[j]) && data[i][6].equals("unacc")){
                     buyingMatrix[0][j]++;
@@ -60,63 +70,80 @@ public class DecisionTree {
                 }
             }
             
+            //2 maint matrix
             for(int j = 0; j < maintAttribute.length; j++){
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
+                if (data[i][1].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
                     maintMatrix[0][j]++;
                 }
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("acc")){
+                if (data[i][1].equals(maintAttribute[j]) && data[i][6].equals("acc")){
                     maintMatrix[1][j]++;
                 }
             }
             
-            for(int j = 0; j < maintAttribute.length; j++){
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
-                    maintMatrix[0][j]++;
+            //3 doors matrix
+            for(int j = 0; j < doorsAttribute.length; j++){
+                if (data[i][2].equals(doorsAttribute[j]) && data[i][6].equals("unacc")){
+                    doorsMatrix[0][j]++;
                 }
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("acc")){
-                    maintMatrix[1][j]++;
-                }
-            }
-            
-            for(int j = 0; j < maintAttribute.length; j++){
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
-                    maintMatrix[0][j]++;
-                }
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("acc")){
-                    maintMatrix[1][j]++;
+                if (data[i][2].equals(doorsAttribute[j]) && data[i][6].equals("acc")){
+                    doorsMatrix[1][j]++;
                 }
             }
             
-            for(int j = 0; j < maintAttribute.length; j++){
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
-                    maintMatrix[0][j]++;
+            //4 persons matrix
+            for(int j = 0; j < personsAttribute.length; j++){
+                if (data[i][3].equals(personsAttribute[j]) && data[i][6].equals("unacc")){
+                    personsMatrix[0][j]++;
                 }
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("acc")){
-                    maintMatrix[1][j]++;
-                }
-            }
-            
-            for(int j = 0; j < maintAttribute.length; j++){
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("unacc")){
-                    maintMatrix[0][j]++;
-                }
-                if (data[i][0].equals(maintAttribute[j]) && data[i][6].equals("acc")){
-                    maintMatrix[1][j]++;
+                if (data[i][3].equals(personsAttribute[j]) && data[i][6].equals("acc")){
+                    personsMatrix[1][j]++;
                 }
             }
             
+            //5 lug boot matrix
+            for(int j = 0; j < lugBootAttribute.length; j++){
+                if (data[i][4].equals(lugBootAttribute[j]) && data[i][6].equals("unacc")){
+                    lugBootMatrix[0][j]++;
+                }
+                if (data[i][4].equals(lugBootAttribute[j]) && data[i][6].equals("acc")){
+                    lugBootMatrix[1][j]++;
+                }
+            }
             
-            
+            //6 safety Matrix
+            for(int j = 0; j < safetyAttribute.length; j++){
+                if (data[i][5].equals(safetyAttribute[j]) && data[i][6].equals("unacc")){
+                    safetyMatrix[0][j]++;
+                }
+                if (data[i][5].equals(safetyAttribute[j]) && data[i][6].equals("acc")){
+                    safetyMatrix[1][j]++;
+                }
+            }
         }
         
+        attributeGini[0] = giniCalculator(buyingMatrix);
+        attributeGini[1] = giniCalculator(maintMatrix);
+        attributeGini[2] = giniCalculator(doorsMatrix);
+        attributeGini[3] = giniCalculator(personsMatrix);
+        attributeGini[4] = giniCalculator(lugBootMatrix);
+        attributeGini[5] = giniCalculator(safetyMatrix);
         int counter = 0;
         for(int i = 0; i < buyingMatrix.length; i++){
             for(int j = 0; j < buyingMatrix[0].length; j++){
-                counter += buyingMatrix[i][j];
+                counter += maintMatrix[i][j];
             }
         }
-        System.out.println("buying matrix total: " + counter);
-        System.out.println("buying matrix gini: " + giniCalculator(buyingMatrix));
+        for(int i = 0; i < attributeGini.length; i++){
+            System.out.println("attribute " + i + " : " + attributeGini[i]);
+        }
+        for(int i = 0; i < buyingMatrix.length; i++){
+            for(int j = 0; j < buyingMatrix[0].length; j++){
+                System.out.print(buyingMatrix[i][j] + ", ");
+            }
+            System.out.println("");
+        }
+        
+        
         Tree root = new Tree();
         //root.setValue();
     }

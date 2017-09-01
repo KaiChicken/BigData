@@ -15,8 +15,8 @@ public class Tree {
     public String value = "";
     public List<Tree> children = new ArrayList<Tree>();
     
-    public Tree(){
-        
+    public Tree(String value){
+        this.value = value;
     }
     
     //set the value of the node

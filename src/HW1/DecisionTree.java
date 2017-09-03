@@ -56,6 +56,8 @@ public class DecisionTree {
         Tree root = new Tree("root");
         String[] remainingAttribute = {"buying", "maint", "doors", "person", "lugBoot", "safety"};
         createTreeByGini(data, root, remainingAttribute, "decision");
+        
+        //print the decision tree
         print(root, 0);
         
         //test the tree
@@ -68,24 +70,29 @@ public class DecisionTree {
                 correctNumber++;
             }
         }
-        System.out.println("Number of test data: " + data.length);
-        System.out.println("Number of correct answer: " + correctNumber);
-        System.out.println("Accuracy " + ((double)correctNumber/data.length));
+        
+        //print the result
+        System.out.println("");
+        System.out.println("******************************************");
+        System.out.println("***Test Results for [data/car.training]***");
+        System.out.println("******************************************");
+        System.out.println("");
+        System.out.println("training_mode gini_index ");
+        System.out.println("matches " + correctNumber);
+        System.out.println("test_rows " + data.length);
+        System.out.println("overall " + ((double)correctNumber/data.length));
     }
     
-    int testCounter = 0;
+    //create the tree by gini index
     public void createTreeByGini(String[][] data, Tree tree, String[] remainingAttribute, String result){
-        //System.out.println("decision test " + testCounter);
-        //testCounter++;
         int numberOfRemainingAttribute = 0; 
-        //System.out.println("test");
+        //find the remaining attributes after every level
         for(int i = 0; i < remainingAttribute.length; i++){
             if(remainingAttribute[i].length() > 1){
                 numberOfRemainingAttribute++;
             }
         }
-        //System.out.println("tree, remaining, result: " + tree.getValue() + ", " + numberOfRemainingAttribute + ", " + result);
-        //System.out.println("number of attribute: " + numberOfRemainingAttribute);
+        //shows the class when it reaches the lower level
         if (numberOfRemainingAttribute == 0){
             if(result.equals("unacc")){
                 Tree child = new Tree("unacc");
@@ -97,28 +104,27 @@ public class DecisionTree {
                 Tree child = new Tree("unknown");
                 tree.addChild(child);
             }
-            
         }
-        int testLevel = 0;
+        
+        //if the the attribute 
         if (numberOfRemainingAttribute > 0){ 
-            //System.out.println("test level " + testLevel);
-            testLevel++;
+            //is the next level is an attribute, not class 
             if (result.equals("decision")){
-                
-                //for(int z = 0; z < remainingAttribute.length; z++){
                 //count the remaining attribute and calculate the gini index
-                int[][] buyingMatrix = new int[2][4];
-                int[][] maintMatrix = new int[2][4];
-                int[][] doorsMatrix = new int[2][4];
-                int[][] personsMatrix = new int[2][3];
-                int[][] lugBootMatrix = new int[2][3];
-                int[][] safetyMatrix = new int[2][3];
-                double[] attributeGini = new double[6];
+                int[][] buyingMatrix = new int[classValue.length][buyingValue.length];
+                int[][] maintMatrix = new int[classValue.length][maintValue.length];
+                int[][] doorsMatrix = new int[classValue.length][doorsValue.length];
+                int[][] personsMatrix = new int[classValue.length][personsValue.length];
+                int[][] lugBootMatrix = new int[classValue.length][lugBootValue.length];
+                int[][] safetyMatrix = new int[classValue.length][safetyValue.length];
+                double[] attributeGini = new double[attributes.length];
+                
+                //find the minimum gini index
                 for(int i = 0; i < attributeGini.length; i++){
                     attributeGini[i] = 1;
                 }
                 for(int i = 0; i < data.length; i++){
-                    //1 buying matrix
+                    //1 count for buying matrix
                     for(int j = 0; j < buyingValue.length; j++){
                         if (data[i][0].equals(buyingValue[j]) && data[i][6].equals("unacc")){
                             buyingMatrix[0][j]++;
@@ -127,7 +133,7 @@ public class DecisionTree {
                             buyingMatrix[1][j]++;
                         }
                     }
-                    //2 maint matrix
+                    //2 count for maint matrix
                     for(int j = 0; j < maintValue.length; j++){
                         if (data[i][1].equals(maintValue[j]) && data[i][6].equals("unacc")){
                             maintMatrix[0][j]++;
@@ -136,7 +142,7 @@ public class DecisionTree {
                             maintMatrix[1][j]++;
                         }
                     }
-                    //3 doors matrix
+                    //3 count for doors matrix
                     for(int j = 0; j < doorsValue.length; j++){
                         if (data[i][2].equals(doorsValue[j]) && data[i][6].equals("unacc")){
                             doorsMatrix[0][j]++;
@@ -145,7 +151,7 @@ public class DecisionTree {
                             doorsMatrix[1][j]++;
                         }
                     }
-                    //4 persons matrix
+                    //4 count for persons matrix
                     for(int j = 0; j < personsValue.length; j++){
                         if (data[i][3].equals(personsValue[j]) && data[i][6].equals("unacc")){
                             personsMatrix[0][j]++;
@@ -154,7 +160,7 @@ public class DecisionTree {
                             personsMatrix[1][j]++;
                         }
                     }
-                    //5 lug boot matrix
+                    //5 count for lug boot matrix
                     for(int j = 0; j < lugBootValue.length; j++){
                         if (data[i][4].equals(lugBootValue[j]) && data[i][6].equals("unacc")){
                             lugBootMatrix[0][j]++;
@@ -163,7 +169,7 @@ public class DecisionTree {
                             lugBootMatrix[1][j]++;
                         }
                     }
-                    //6 safety Matrix
+                    //6 count for safety Matrix
                     for(int j = 0; j < safetyValue.length; j++){
                         if (data[i][5].equals(safetyValue[j]) && data[i][6].equals("unacc")){
                             safetyMatrix[0][j]++;
@@ -174,7 +180,7 @@ public class DecisionTree {
                     }      
                 }
                 
-                //calculate the gini index for different attribute
+                //only calculate the gini index for the attribute that's not used
                 if (remainingAttribute[0].length() > 1){
                     attributeGini[0] = giniCalculator(buyingMatrix);
                 }

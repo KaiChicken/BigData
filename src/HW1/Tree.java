@@ -14,9 +14,15 @@ import java.util.*;
 public class Tree {
     public String value = "";
     public List<Tree> children = new ArrayList<Tree>();
+    public double giniIndex = 0;
     
     public Tree(String value){
         this.value = value;
+    }
+    
+    //set the index 
+    public void setGiniIndex(double giniIndex){
+        this.giniIndex = giniIndex;
     }
     
     //set the value of the node
